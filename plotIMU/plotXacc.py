@@ -45,11 +45,11 @@ MAG_MEDIANTABLESIZE = 9         # Median filter table size for magnetometer. Hig
 ######JON
 plt.ion() ## Note this correction
 fig=plt.figure()
-plt.axis([0,1000,0,1])
+plt.axis([0,100,0,1])
 
 i=0
 x=list()
-y=list()
+List =[]
 
 ######JON
 
@@ -213,7 +213,7 @@ if(IMU.BerryIMUversion == 99):
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-while i<100:
+while i<150:
 
     #Read the accelerometer,gyroscope and magnetometer values
     ACCx = IMU.readACCx()
@@ -424,12 +424,10 @@ while i<100:
     time.sleep(0.03)
 
 ######JON
-    temp_y=np.random.random();
-    x.append(i);
-    y.append(temp_y);
-    plt.scatter(i,AccXangle);
-    i+=1;
-    plt.show()
-    plt.pause(0.01) #Note this correction
+    #x.append(AccXangle)
+    List.append(round(AccXangle, 2))
+    i+=1
+
+print(List)
 
 ######JON
