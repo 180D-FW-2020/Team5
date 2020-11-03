@@ -50,6 +50,11 @@ plt.axis([0,100,0,1])
 i=0
 x=list()
 List =[]
+List1 = []
+List2 = []
+List3 = []
+List4 = []
+List5 = []
 
 ######JON
 
@@ -425,9 +430,26 @@ while i<150:
 
 ######JON
     #x.append(AccXangle)
-    List.append(round(AccXangle, 2))
+    List.append(round(AccXangle, 3))
+    List1.append(round(AccYangle, 3))
+    List2.append(round(gyroXangle, 3))
+    List3.append(round(gyroYangle, 3))
+    List4.append(round(gyroZangle, 3))
+
     i+=1
 
+print("X ACC:: ")
 print(List)
+print("Y ACC:: ")
+print(List1)
+print("X GYRO:: ")
+print(List2)
+print("Y GYRO:: ")
+print(List3)
+print("Z GYRO:: ")
+print(List4)
+
+
+
 
 ######JON
