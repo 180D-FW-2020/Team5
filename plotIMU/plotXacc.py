@@ -55,6 +55,8 @@ List2 = []
 List3 = []
 List4 = []
 List5 = []
+List6 = []
+List7 = []
 
 ######JON
 
@@ -435,12 +437,21 @@ while i<150:
     List2.append(round(gyroXangle, 3))
     List3.append(round(gyroYangle, 3))
     List4.append(round(gyroZangle, 3))
+    List5.append(round(ACCx, 3))
+    List6.append(round(ACCy, 3))
+    List7.append(round(ACCz, 3))
 
     i+=1
 
 print("X ACC:: ")
-print(List)
+print(List6)
 print("Y ACC:: ")
+print(List7)
+print("Z ACC:: ")
+print(List5)
+print("X ACC - Angle:: ")
+print(List)
+print("Y ACC - Angle:: ")
 print(List1)
 print("X GYRO:: ")
 print(List2)
