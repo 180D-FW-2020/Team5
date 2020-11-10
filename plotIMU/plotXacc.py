@@ -28,9 +28,9 @@ import os
 import paho.mqtt.client as mqtt
 import numpy as np
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+#import matplotlib
+#matplotlib.use('Agg')
+#import matplotlib.pyplot as plt
 ######JON
 
 RAD_TO_DEG = 57.29578
