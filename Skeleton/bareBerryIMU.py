@@ -2,20 +2,13 @@
 #
 #    This program  reads the angles from the acceleromteer, gyroscope
 #    and mangnetometer on a BerryIMU connected to a Raspberry Pi.
-#
 #    This program includes two filters (low pass and median) to improve the
 #    values returned from BerryIMU by reducing noise.
-#
 #    The BerryIMUv1, BerryIMUv2 and BerryIMUv3 are supported
-#
 #    This script is python 2.7 and 3 compatible
-#
 #    Feel free to do whatever you like with this code.
 #    Distributed as-is; no warranty is given.
-#
 #    http://ozzmaker.com/
-
-
 
 import sys
 import time
@@ -27,10 +20,6 @@ import os
 ######JON
 import paho.mqtt.client as mqtt
 import numpy as np
-
-#import matplotlib
-#matplotlib.use('Agg')
-#import matplotlib.pyplot as plt
 ######JON
 
 RAD_TO_DEG = 57.29578
@@ -42,29 +31,10 @@ ACC_LPF_FACTOR = 0.4    # Low pass filter constant for accelerometer
 ACC_MEDIANTABLESIZE = 9         # Median filter table size for accelerometer. Higher = smoother but a longer delay
 MAG_MEDIANTABLESIZE = 9         # Median filter table size for magnetometer. Higher = smoother but a longer delay
 
-######JON
-#plt.ion() ## Note this correction
-#fig=plt.figure()
-#plt.axis([0,100,0,1])
-
-i=0
-x=list()
-List =[]
-List1 = []
-List2 = []
-List3 = []
-List4 = []
-List5 = []
-
-######JON
-
-
-
 ################# Compass Calibration values ############
 # Use calibrateBerryIMU.py to get calibration values
 # Calibrating the compass isnt mandatory, however a calibrated
 # compass will result in a more accurate heading value.
-
 magXmin =  0
 magYmin =  0
 magZmin =  0
@@ -72,20 +42,7 @@ magXmax =  0
 magYmax =  0
 magZmax =  0
 
-
-'''
-Here is an example:
-magXmin =  -1748
-magYmin =  -1025
-magZmin =  -1876
-magXmax =  959
-magYmax =  1651
-magZmax =  708
-Dont use the above values, these are just an example.
-'''
 ############### END Calibration offsets #################
-
-
 #Kalman filter variables
 Q_angle = 0.02
 Q_gyro = 0.0015
@@ -102,80 +59,6 @@ YP_10 = 0.0
 YP_11 = 0.0
 KFangleX = 0.0
 KFangleY = 0.0
-
-
-
-def kalmanFilterY ( accAngle, gyroRate, DT):
-    y=0.0
-    S=0.0
-
-    global KFangleY
-    global Q_angle
-    global Q_gyro
-    global y_bias
-    global YP_00
-    global YP_01
-    global YP_10
-    global YP_11
-
-    KFangleY = KFangleY + DT * (gyroRate - y_bias)
-
-    YP_00 = YP_00 + ( - DT * (YP_10 + YP_01) + Q_angle * DT )
-    YP_01 = YP_01 + ( - DT * YP_11 )
-    YP_10 = YP_10 + ( - DT * YP_11 )
-    YP_11 = YP_11 + ( + Q_gyro * DT )
-
-    y = accAngle - KFangleY
-    S = YP_00 + R_angle
-    K_0 = YP_00 / S
-    K_1 = YP_10 / S
-
-    KFangleY = KFangleY + ( K_0 * y )
-    y_bias = y_bias + ( K_1 * y )
-
-    YP_00 = YP_00 - ( K_0 * YP_00 )
-    YP_01 = YP_01 - ( K_0 * YP_01 )
-    YP_10 = YP_10 - ( K_1 * YP_00 )
-    YP_11 = YP_11 - ( K_1 * YP_01 )
-
-    return KFangleY
-
-def kalmanFilterX ( accAngle, gyroRate, DT):
-    x=0.0
-    S=0.0
-
-    global KFangleX
-    global Q_angle
-    global Q_gyro
-    global x_bias
-    global XP_00
-    global XP_01
-    global XP_10
-    global XP_11
-
-
-    KFangleX = KFangleX + DT * (gyroRate - x_bias)
-
-    XP_00 = XP_00 + ( - DT * (XP_10 + XP_01) + Q_angle * DT )
-    XP_01 = XP_01 + ( - DT * XP_11 )
-    XP_10 = XP_10 + ( - DT * XP_11 )
-    XP_11 = XP_11 + ( + Q_gyro * DT )
-
-    x = accAngle - KFangleX
-    S = XP_00 + R_angle
-    K_0 = XP_00 / S
-    K_1 = XP_10 / S
-
-    KFangleX = KFangleX + ( K_0 * x )
-    x_bias = x_bias + ( K_1 * x )
-
-    XP_00 = XP_00 - ( K_0 * XP_00 )
-    XP_01 = XP_01 - ( K_0 * XP_01 )
-    XP_10 = XP_10 - ( K_1 * XP_00 )
-    XP_11 = XP_11 - ( K_1 * XP_01 )
-
-    return KFangleX
-
 
 gyroXangle = 0.0
 gyroYangle = 0.0
@@ -194,8 +77,6 @@ oldYAccRawValue = 0
 oldZAccRawValue = 0
 
 a = datetime.datetime.now()
-
-
 
 #Setup the tables for the mdeian filter. Fill them all with '1' so we dont get devide by zero error
 acc_medianTable1X = [1] * ACC_MEDIANTABLESIZE
@@ -217,8 +98,7 @@ if(IMU.BerryIMUversion == 99):
     sys.exit()
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
-
-while i<150:
+while True:
 
     #Read the accelerometer,gyroscope and magnetometer values
     ACCx = IMU.readACCx()
@@ -231,20 +111,16 @@ while i<150:
     MAGy = IMU.readMAGy()
     MAGz = IMU.readMAGz()
 
-
     #Apply compass calibration
     MAGx -= (magXmin + magXmax) /2
     MAGy -= (magYmin + magYmax) /2
     MAGz -= (magZmin + magZmax) /2
-
 
     ##Calculate loop Period(LP). How long between Gyro Reads
     b = datetime.datetime.now() - a
     a = datetime.datetime.now()
     LP = b.microseconds/(1000000*1.0)
     outputString = "Loop Time %5.2f " % ( LP )
-
-
 
     ###############################################
     #### Apply low pass filter ####
@@ -292,8 +168,6 @@ while i<150:
     ACCy = acc_medianTable2Y[int(ACC_MEDIANTABLESIZE/2)];
     ACCz = acc_medianTable2Z[int(ACC_MEDIANTABLESIZE/2)];
 
-
-
     #########################################
     #### Median filter for magnetometer ####
     #########################################
@@ -323,13 +197,10 @@ while i<150:
     MAGy = mag_medianTable2Y[int(MAG_MEDIANTABLESIZE/2)];
     MAGz = mag_medianTable2Z[int(MAG_MEDIANTABLESIZE/2)];
 
-
-
     #Convert Gyro raw to degrees per second
     rate_gyr_x =  GYRx * G_GAIN
     rate_gyr_y =  GYRy * G_GAIN
     rate_gyr_z =  GYRz * G_GAIN
-
 
     #Calculate the angles from the gyro.
     gyroXangle+=rate_gyr_x*LP
@@ -340,15 +211,12 @@ while i<150:
     AccXangle =  (math.atan2(ACCy,ACCz)*RAD_TO_DEG)
     AccYangle =  (math.atan2(ACCz,ACCx)+M_PI)*RAD_TO_DEG
 
-
     #Change the rotation value of the accelerometer to -/+ 180 and
     #move the Y axis '0' point to up.  This makes it easier to read.
     if AccYangle > 90:
         AccYangle -= 270.0
     else:
         AccYangle += 90.0
-
-
 
     #Complementary filter used to combine the accelerometer and gyro values.
     CFangleX=AA*(CFangleX+rate_gyr_x*LP) +(1 - AA) * AccXangle
@@ -372,11 +240,9 @@ while i<150:
     accXnorm = ACCx/math.sqrt(ACCx * ACCx + ACCy * ACCy + ACCz * ACCz)
     accYnorm = ACCy/math.sqrt(ACCx * ACCx + ACCy * ACCy + ACCz * ACCz)
 
-
     #Calculate pitch and roll
     pitch = math.asin(accXnorm)
     roll = -math.asin(accYnorm/math.cos(pitch))
-
 
     #Calculate the new tilt compensated values
     #The compass and accelerometer are orientated differently on the the BerryIMUv1, v2 and v3.
@@ -394,62 +260,58 @@ while i<150:
     else:                                                                #LSM9DS1
         magYcomp = MAGx*math.sin(roll)*math.sin(pitch)+MAGy*math.cos(roll)+MAGz*math.sin(roll)*math.cos(pitch)
 
-
-
-
-
     #Calculate tilt compensated heading
     tiltCompensatedHeading = 180 * math.atan2(magYcomp,magXcomp)/M_PI
 
     if tiltCompensatedHeading < 0:
         tiltCompensatedHeading += 360
 
-
     ##################### END Tilt Compensation ########################
-
-
-    if 1:                       #Change to '0' to stop showing the angles from the accelerometer
-        outputString += "#  ACCX Angle %5.2f ACCY Angle %5.2f  #  " % (AccXangle, AccYangle)
-
-    if 1:                       #Change to '0' to stop  showing the angles from the gyro
-        outputString +="\t# GRYX Angle %5.2f  GYRY Angle %5.2f  GYRZ Angle %5.2f # " % (gyroXangle,gyroYangle,gyroZangle)
-
-    if 1:                       #Change to '0' to stop  showing the angles from the complementary filter
-        outputString +="\t#  CFangleX Angle %5.2f   CFangleY Angle %5.2f  #" % (CFangleX,CFangleY)
-
-    if 1:                       #Change to '0' to stop  showing the heading
-        outputString +="\t# HEADING %5.2f  tiltCompensatedHeading %5.2f #" % (heading,tiltCompensatedHeading)
-
-    if 1:                       #Change to '0' to stop  showing the angles from the Kalman filter
-        outputString +="# kalmanX %5.2f   kalmanY %5.2f #" % (kalmanX,kalmanY)
-
-    print(outputString)
-
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
 
 ######JON
-    #x.append(AccXangle)
-    List.append(round(AccXangle, 3))
-    List1.append(round(AccYangle, 3))
-    List2.append(round(gyroXangle, 3))
-    List3.append(round(gyroYangle, 3))
-    List4.append(round(gyroZangle, 3))
+# 0. define callbacks - functions that run when events happen.
+# The callback for when the client receives a CONNACK response from the server.
+    def on_connect(client, userdata, flags, rc):
+        print("Connection returned result: "+str(rc))
 
-    i+=1
+        # Subscribing in on_connect() means that if we lose the connection and
+        # reconnect then subscriptions will be renewed.
+        # client.subscribe("ece180d/test")
 
-print("X ACC:: ")
-print(List)
-print("Y ACC:: ")
-print(List1)
-print("X GYRO:: ")
-print(List2)
-print("Y GYRO:: ")
-print(List3)
-print("Z GYRO:: ")
-print(List4)
+    # The callback of the client when it disconnects.
+    def on_disconnect(client, userdata, rc):
+        if rc != 0:
+            print('Unexpected Disconnect')
+        else:
+            print('Expected Disconnect')
 
+    # The default message callback.
+    # (won’t be used if only publishing, but can still exist)
+    def on_message(client, userdata, message):
+        print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
 
+    # 1. create a client instance.
+    client = mqtt.Client()
+    # add additional client options (security, certifications, etc.)
+    # many default options should be good to start off.
+    # add callbacks to client.
+    client.on_connect = on_connect
+    client.on_disconnect = on_disconnect
+    client.on_message = on_message
+    # 2. connect to a broker using one of the connect*() functions.
+    client.connect_async('mqtt.eclipse.org')
 
+    # 3. call one of the loop*() functions to maintain network traffic flow with the broker.
+    client.loop_start()
+    # 4. use subscribe() to subscribe to a topic and receive messages.
+    # 5. use publish() to publish messages to the broker.
+    # payload must be a string, bytearray, int, float or None.
+    for i in range(10):
+        client.publish('ece180d/test', AccXangle, qos=1)
 
+    # 6. use disconnect() to disconnect from the broker.
+    client.loop_stop()
+    client.disconnect()
 ######JON
