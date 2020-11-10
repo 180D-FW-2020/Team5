@@ -444,11 +444,11 @@ while i<150:
     i+=1
 
 print("X ACC:: ")
-print(List6)
-print("Y ACC:: ")
-print(List7)
-print("Z ACC:: ")
 print(List5)
+print("Y ACC:: ")
+print(List6)
+print("Z ACC:: ")
+print(List7)
 print("X ACC - Angle:: ")
 print(List)
 print("Y ACC - Angle:: ")
