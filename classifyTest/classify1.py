@@ -220,7 +220,7 @@ if(IMU.BerryIMUversion == 99):
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-while i<150:
+while i<300:
 
     #Read the accelerometer,gyroscope and magnetometer values
     ACCx = IMU.readACCx()
@@ -427,6 +427,13 @@ while i<150:
 
     print(outputString)
 
+######JON
+
+    myACC = IMU.readACCx()
+    if(ACCx<8600 and ACCx>7700):   #  threshhold at value 8000 as center
+        print("No Motion Detected: " + str(myACC))
+    print(round(myACC,3))
+
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
 
@@ -444,10 +451,9 @@ while i<150:
     i+=1
 
 print("X ACC:: ")
-print(List6)
 print(List5)
-print("X ACC - Angle:: ")
-print(List)
+#print("X ACC - Angle:: ")
+#print(List)
 
 
 
