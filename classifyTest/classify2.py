@@ -27,10 +27,6 @@ import os
 ######JON
 import paho.mqtt.client as mqtt
 import numpy as np
-
-#import matplotlib
-#matplotlib.use('Agg')
-#import matplotlib.pyplot as plt
 ######JON
 
 RAD_TO_DEG = 57.29578
@@ -43,11 +39,11 @@ ACC_MEDIANTABLESIZE = 9         # Median filter table size for accelerometer. Hi
 MAG_MEDIANTABLESIZE = 9         # Median filter table size for magnetometer. Higher = smoother but a longer delay
 
 ######JON
-#plt.ion() ## Note this correction
-#fig=plt.figure()
-#plt.axis([0,100,0,1])
 
 i=0
+downSwing = False
+backswing = False
+
 x=list()
 List =[]
 List1 = []
@@ -439,10 +435,12 @@ while i<500:
             print("No Motion Detected")
         else:
             print("Motion Detected: " + str(myACC))
-            if(myACC < restingPlace-1000):
+            if(myACC < restingPlace-500):
                 print("BACK SWING DETECTED!")
+                backSwing = True
             elif(myACC > restingPlace+1000):
-                print("DOWN SWING DETECTED")
+                print("DOWN SWING DETECTED!")
+                downSwing = True
 
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
