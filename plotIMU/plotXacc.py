@@ -43,9 +43,9 @@ ACC_MEDIANTABLESIZE = 9         # Median filter table size for accelerometer. Hi
 MAG_MEDIANTABLESIZE = 9         # Median filter table size for magnetometer. Higher = smoother but a longer delay
 
 ######JON
-plt.ion() ## Note this correction
-fig=plt.figure()
-plt.axis([0,100,0,1])
+#plt.ion() ## Note this correction
+#fig=plt.figure()
+#plt.axis([0,100,0,1])
 
 i=0
 x=list()
