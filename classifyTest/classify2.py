@@ -220,7 +220,7 @@ if(IMU.BerryIMUversion == 99):
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-while i<200:
+while i<500:
 
     #Read the accelerometer,gyroscope and magnetometer values
     ACCx = IMU.readACCx()
@@ -430,19 +430,25 @@ while i<200:
 ######JON
     if(i==25):
         restingPlace = myACC
+        print("RESTING VALUE: " + str(restingPlace))
 
     myACC = IMU.readACCx()
     
     if(i>=25):
-        if(ACCx<restingPlace+100 and ACCx>restingPlace-100):   #  threshhold at value 8000 as center
-            print("No Motion Detected: " + str(myACC))
-    #print(round(myACC,3))
+        if(ACCx<restingPlace+350 and ACCx>restingPlace-350):   # variable threshold value, good for different stances
+            print("No Motion Detected")
+        else:
+            print("Motion Detected: " + str(myACC))
+            if(myACC < restingPlace-1000):
+                print("BACK SWING DETECTED!")
+            elif(myACC > restingPlace+1000):
+                print("DOWN SWING DETECTED")
 
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
 
 ######JON
-    #x.append(AccXangle)
+
     List.append(round(AccXangle, 3))
     List1.append(round(AccYangle, 3))
     List2.append(round(gyroXangle, 3))
@@ -456,10 +462,4 @@ while i<200:
 
 print("X ACC:: ")
 print(List5)
-#print("X ACC - Angle:: ")
-#print(List)
-
-
-
-
 ######JON
