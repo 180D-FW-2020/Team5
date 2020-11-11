@@ -36,8 +36,10 @@ ctr=0
 noMotion = True
 downSwing = False
 backswing = False
+completeSwing = False
 
 x=list()
+powerList = []
 List =[]
 List1 = []
 List2 = []
@@ -56,7 +58,7 @@ if(IMU.BerryIMUversion == 99):
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-while i<500:
+while i<200:
 
     #Read the accelerometer,gyroscope and magnetometer values
     ACCx = IMU.readACCx()
@@ -87,6 +89,11 @@ while i<500:
             if(ctr>=4):
                 backSwing = False
                 downSwing = False
+                completeSwing = False
+                if(len(powerList) != 0):
+                    print(powerList)
+                    print("SWING POWER: " + str(max(powerList)))
+                    powerList.clear()
         else:
             print("Motion Detected: " + str(myACC))
             if(myACC < restingPlace-500):
@@ -103,14 +110,21 @@ while i<500:
 
         if(downSwing == True and backSwing == True):
             print("COMPLETE SWING!!!!!!!!!!!!!")
+            completeSwing = True
             downSwing = False
             backSwing = False
+            powerList = List[i-5:]
+            #print(myList)
+
+        if(completeSwing == True):
+            powerList.append(round(ACCx,3))
 
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
 
 ######JON
-
+    
+    List.append(round(ACCx,3))
     i+=1
 
 ######JON
