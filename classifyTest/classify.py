@@ -102,14 +102,14 @@ while i<200:
                 downSwing = False
                 noMotion = False
                 ctr=0
-            elif(myACC > restingPlace+1000):
+            elif(myACC > restingPlace+450):
                 print("DOWN SWING DETECTED!")
                 downSwing = True
                 noMotion = False
                 ctr=0
 
         if(downSwing == True and backSwing == True):
-            print("COMPLETE SWING!!!!!!!!!!!!!")
+            print("     COMPLETE SWING!!!!!!!!!!!!!")
             completeSwing = True
             downSwing = False
             backSwing = False
