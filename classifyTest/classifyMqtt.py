@@ -33,7 +33,7 @@ List7 = []
 ######JON
 
 
-################### MQTT ###################
+################### MQTT SETUP ###################
 
 def on_connect(client, userdata, flags, rc):
     print("Connection returned result: "+str(rc))
@@ -67,7 +67,7 @@ client.loop_start()
 # 6. use disconnect() to disconnect from the broker.
 #client.loop_stop()
 #client.disconnect()
-################### MQTT ###################
+################### MQTT SETUP ###################
 
 
 ################### CLASSIFIER ###################
@@ -157,7 +157,7 @@ while i<150:
 ################### CLASSIFIER ###################
 
 
-################### MQTTEND ###################
+################### MQTT END ###################
 client.loop_stop()
 client.disconnect()
-################### MQTTEND ###################
+################### MQTT END ###################
