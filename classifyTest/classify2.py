@@ -27,10 +27,6 @@ import os
 ######JON
 import paho.mqtt.client as mqtt
 import numpy as np
-
-#import matplotlib
-#matplotlib.use('Agg')
-#import matplotlib.pyplot as plt
 ######JON
 
 RAD_TO_DEG = 57.29578
@@ -43,11 +39,11 @@ ACC_MEDIANTABLESIZE = 9         # Median filter table size for accelerometer. Hi
 MAG_MEDIANTABLESIZE = 9         # Median filter table size for magnetometer. Higher = smoother but a longer delay
 
 ######JON
-#plt.ion() ## Note this correction
-#fig=plt.figure()
-#plt.axis([0,100,0,1])
 
 i=0
+downSwing = False
+backswing = False
+
 x=list()
 List =[]
 List1 = []
@@ -220,7 +216,7 @@ if(IMU.BerryIMUversion == 99):
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-while i<150:
+while i<500:
 
     #Read the accelerometer,gyroscope and magnetometer values
     ACCx = IMU.readACCx()
@@ -410,28 +406,47 @@ while i<150:
     ##################### END Tilt Compensation ########################
 
 
-    if 1:                       #Change to '0' to stop showing the angles from the accelerometer
+    if 0:                       #Change to '0' to stop showing the angles from the accelerometer
         outputString += "#  ACCX Angle %5.2f ACCY Angle %5.2f  #  " % (AccXangle, AccYangle)
 
-    if 1:                       #Change to '0' to stop  showing the angles from the gyro
+    if 0:                       #Change to '0' to stop  showing the angles from the gyro
         outputString +="\t# GRYX Angle %5.2f  GYRY Angle %5.2f  GYRZ Angle %5.2f # " % (gyroXangle,gyroYangle,gyroZangle)
 
-    if 1:                       #Change to '0' to stop  showing the angles from the complementary filter
+    if 0:                       #Change to '0' to stop  showing the angles from the complementary filter
         outputString +="\t#  CFangleX Angle %5.2f   CFangleY Angle %5.2f  #" % (CFangleX,CFangleY)
 
-    if 1:                       #Change to '0' to stop  showing the heading
+    if 0:                       #Change to '0' to stop  showing the heading
         outputString +="\t# HEADING %5.2f  tiltCompensatedHeading %5.2f #" % (heading,tiltCompensatedHeading)
 
-    if 1:                       #Change to '0' to stop  showing the angles from the Kalman filter
+    if 0:                       #Change to '0' to stop  showing the angles from the Kalman filter
         outputString +="# kalmanX %5.2f   kalmanY %5.2f #" % (kalmanX,kalmanY)
 
-    print(outputString)
+    #print(outputString)
+
+######JON
+    if(i==25):
+        restingPlace = myACC
+        print("RESTING VALUE: " + str(restingPlace))
+
+    myACC = IMU.readACCx()
+    
+    if(i>=25):
+        if(ACCx<restingPlace+350 and ACCx>restingPlace-350):   # variable threshold value, good for different stances
+            print("No Motion Detected")
+        else:
+            print("Motion Detected: " + str(myACC))
+            if(myACC < restingPlace-500):
+                print("BACK SWING DETECTED!")
+                backSwing = True
+            elif(myACC > restingPlace+1000):
+                print("DOWN SWING DETECTED!")
+                downSwing = True
 
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
 
 ######JON
-    #x.append(AccXangle)
+
     List.append(round(AccXangle, 3))
     List1.append(round(AccYangle, 3))
     List2.append(round(gyroXangle, 3))
@@ -445,22 +460,4 @@ while i<150:
 
 print("X ACC:: ")
 print(List5)
-print("Y ACC:: ")
-print(List6)
-print("Z ACC:: ")
-print(List7)
-print("X ACC - Angle:: ")
-print(List)
-print("Y ACC - Angle:: ")
-print(List1)
-print("X GYRO:: ")
-print(List2)
-print("Y GYRO:: ")
-print(List3)
-print("Z GYRO:: ")
-print(List4)
-
-
-
-
 ######JON

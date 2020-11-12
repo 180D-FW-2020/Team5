@@ -220,7 +220,7 @@ if(IMU.BerryIMUversion == 99):
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-while i<150:
+while i<300:
 
     #Read the accelerometer,gyroscope and magnetometer values
     ACCx = IMU.readACCx()
@@ -410,22 +410,29 @@ while i<150:
     ##################### END Tilt Compensation ########################
 
 
-    if 1:                       #Change to '0' to stop showing the angles from the accelerometer
+    if 0:                       #Change to '0' to stop showing the angles from the accelerometer
         outputString += "#  ACCX Angle %5.2f ACCY Angle %5.2f  #  " % (AccXangle, AccYangle)
 
-    if 1:                       #Change to '0' to stop  showing the angles from the gyro
+    if 0:                       #Change to '0' to stop  showing the angles from the gyro
         outputString +="\t# GRYX Angle %5.2f  GYRY Angle %5.2f  GYRZ Angle %5.2f # " % (gyroXangle,gyroYangle,gyroZangle)
 
-    if 1:                       #Change to '0' to stop  showing the angles from the complementary filter
+    if 0:                       #Change to '0' to stop  showing the angles from the complementary filter
         outputString +="\t#  CFangleX Angle %5.2f   CFangleY Angle %5.2f  #" % (CFangleX,CFangleY)
 
-    if 1:                       #Change to '0' to stop  showing the heading
+    if 0:                       #Change to '0' to stop  showing the heading
         outputString +="\t# HEADING %5.2f  tiltCompensatedHeading %5.2f #" % (heading,tiltCompensatedHeading)
 
-    if 1:                       #Change to '0' to stop  showing the angles from the Kalman filter
+    if 0:                       #Change to '0' to stop  showing the angles from the Kalman filter
         outputString +="# kalmanX %5.2f   kalmanY %5.2f #" % (kalmanX,kalmanY)
 
     print(outputString)
+
+######JON
+
+    myACC = IMU.readACCx()
+    if(ACCx<8600 and ACCx>7700):   #  threshhold at value 8000 as center
+        print("No Motion Detected: " + str(myACC))
+    print(round(myACC,3))
 
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
@@ -445,20 +452,8 @@ while i<150:
 
 print("X ACC:: ")
 print(List5)
-print("Y ACC:: ")
-print(List6)
-print("Z ACC:: ")
-print(List7)
-print("X ACC - Angle:: ")
-print(List)
-print("Y ACC - Angle:: ")
-print(List1)
-print("X GYRO:: ")
-print(List2)
-print("Y GYRO:: ")
-print(List3)
-print("Z GYRO:: ")
-print(List4)
+#print("X ACC - Angle:: ")
+#print(List)
 
 
 

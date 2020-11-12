@@ -453,12 +453,6 @@ print("X ACC - Angle:: ")
 print(List)
 print("Y ACC - Angle:: ")
 print(List1)
-print("X GYRO:: ")
-print(List2)
-print("Y GYRO:: ")
-print(List3)
-print("Z GYRO:: ")
-print(List4)
 
 
 
