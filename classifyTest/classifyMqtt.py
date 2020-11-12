@@ -5,13 +5,9 @@ import IMU
 import datetime
 import os
 
-######JON
 import paho.mqtt.client as mqtt
 import numpy as np
-######JON
 
-
-######JON
 i=0
 ctr=0
 completeSwingI=0
@@ -23,15 +19,6 @@ completeSwing = False
 x=list()
 powerList = []
 List =[]
-List1 = []
-List2 = []
-List3 = []
-List4 = []
-List5 = []
-List6 = []
-List7 = []
-######JON
-
 
 ################### MQTT SETUP ###################
 
@@ -55,18 +42,16 @@ client = mqtt.Client()
 # add additional client options (security, certifications, etc.)
 # many default options should be good to start off.
 # add callbacks to client.
+
 client.on_connect = on_connect
 client.on_disconnect = on_disconnect
 client.on_message = on_message
+
 # 2. connect to a broker using one of the connect*() functions.
 client.connect_async('mqtt.eclipse.org')
 
 client.loop_start()
 #client.publish('ece180d/test', float(np.random.random(1)), qos=1)
-
-# 6. use disconnect() to disconnect from the broker.
-#client.loop_stop()
-#client.disconnect()
 ################### MQTT SETUP ###################
 
 
