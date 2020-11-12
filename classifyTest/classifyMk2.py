@@ -59,7 +59,7 @@ if(IMU.BerryIMUversion == 99):
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-while i<200:
+while i<150:
 
     #Read the accelerometer,gyroscope and magnetometer values
     ACCx = IMU.readACCx()
@@ -84,7 +84,7 @@ while i<200:
     
     if(i>=25):
         if(completeSwing==True):
-            if(completeSwingI+7 == i)
+            if(completeSwingI+7 == i):
                 print(powerList)
                 print("SWING POWER: " + str(max(powerList)))
                 powerList.clear()
@@ -114,6 +114,10 @@ while i<200:
                 downSwing = True
                 noMotion = False
                 ctr=0
+
+        if(completeSwing == True):
+            downSwing =False
+            backSwing =False
 
         if(downSwing == True and backSwing == True):
             print("     COMPLETE SWING!!!!!!!!!!!!!")
