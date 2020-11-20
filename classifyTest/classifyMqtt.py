@@ -89,7 +89,7 @@ while i<150:
                 print(powerList)
                 print("SWING POWER: " + str(max(powerList)))
 
-                client.publish('ece180d/Team5/IMU', max(powerList)), qos=1)
+                client.publish('ece180d_Team5', max(powerList)), qos=1)
 
                 powerList.clear()
                 backSwing = False
