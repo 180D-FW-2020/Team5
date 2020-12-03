@@ -11,6 +11,8 @@ import numpy as np
 i=0
 ctr=0
 completeSwingI=0
+downCtr=0
+waitCtr=0
 noMotion = True
 downSwing = False
 backswing = False
@@ -63,7 +65,7 @@ if(IMU.BerryIMUversion == 99):
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-while i<150:
+while i<500:
     #Read the accelerometer,gyroscope and magnetometer values
     ACCx = IMU.readACCx()
     ACCy = IMU.readACCy()
@@ -82,22 +84,25 @@ while i<150:
         print("RESTING VALUE: " + str(restingPlace))
 
     myACC = IMU.readACCx()
+    waitCtr-=1
     
-    if(i>=25):
+    if(i>=25 and waitCtr<=0):
         if(completeSwing==True):
             if(completeSwingI+7 == i):
                 print(powerList)
                 print("SWING POWER: " + str(max(powerList)))
 
-                client.publish('ece180da_team5', str(max(powerList)), qos=1)
+                client.publish('ece180da_team5', str(max(powerList)/1000), qos=1)
 
                 powerList.clear()
                 backSwing = False
                 downSwing = False
                 completeSwing = False
+                waitCtr=10
 
         if(ACCx<restingPlace+350 and ACCx>restingPlace-350):   # variable threshold value, good for different stances
             print("No Motion Detected")
+            downCtr=0
             noMotion = True
             ctr+=1
             if(ctr>=4):
@@ -107,14 +112,16 @@ while i<150:
                 
         else:
             print("Motion Detected: " + str(myACC))
-            if(myACC < restingPlace-500):
+            if(myACC < restingPlace-400):
                 print("BACK SWING DETECTED!")
+                downCtr=0
                 backSwing = True
                 downSwing = False
                 noMotion = False
                 ctr=0
-            elif(myACC > restingPlace+450):
+            elif(myACC > restingPlace+400):
                 print("DOWN SWING DETECTED!")
+                downCtr+=1
                 downSwing = True
                 noMotion = False
                 ctr=0
@@ -124,12 +131,14 @@ while i<150:
             backSwing =False
 
         if(downSwing == True and backSwing == True):
-            print("     COMPLETE SWING!!!!!!!!!!!!!")
-            completeSwing = True
-            downSwing = False
-            backSwing = False
-            powerList = List[i-5:]
-            completeSwingI=i
+            if(downCtr>=5):
+                print("     COMPLETE SWING!!!!!!!!!!!!!")
+                completeSwing = True
+                downSwing = False
+                backSwing = False
+                powerList = List[i-5:]
+                completeSwingI=i
+                downCtr=0
 
         if(completeSwing == True):
             powerList.append(round(ACCx,3))

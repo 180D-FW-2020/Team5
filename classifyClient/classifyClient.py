@@ -1,7 +1,8 @@
 import time
-import importTest
+#import importTest
 
 while True:
-  time.sleep(3)
-  importTest.py
+    print('jonjon')
+    time.sleep(3)
+    exec("/Team5/classifyClient/importTest.py")
   
