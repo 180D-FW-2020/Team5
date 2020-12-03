@@ -3,9 +3,11 @@ import importTest
 
 import paho.mqtt.client as mqtt
 
+message1="haha"
+
 def on_connect(client, userdata, flags, rc):
     print("Connection returned result: "+str(rc))
-    client.subscribe("ece180d_team5", qos=1)
+    client.subscribe("ece180d/test", qos=1)
 
 def on_disconnect(client, userdata, rc):
     if rc != 0:
@@ -15,6 +17,8 @@ def on_disconnect(client, userdata, rc):
 
 def on_message(client, userdata, message):
     print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
+    importTest.callFile()
+    #message1 = str(message.payload)
 
 client = mqtt.Client()
 client.on_connect = on_connect
@@ -28,9 +32,8 @@ client.loop_start()
 
 while True:
     print('jonjon')
-    client.subscribe("ece180d_Team5", qos=1)
-    message = client.message.payload
-    callFile()
+    #print(message1)
+    #importTest.callFile()
     
 client.loop_stop()
 client.disconnect()  
