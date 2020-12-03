@@ -1,1 +1,2 @@
-print("FILE imported correctly.")
+def callFile():
+    print("FILE imported correctly.")
