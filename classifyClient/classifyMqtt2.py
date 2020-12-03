@@ -8,17 +8,6 @@ import os
 import paho.mqtt.client as mqtt
 import numpy as np
 
-i=0
-ctr=0
-completeSwingI=0
-noMotion = True
-downSwing = False
-backswing = False
-completeSwing = False
-
-x=list()
-powerList = []
-List =[]
 
 ################### MQTT SETUP ###################
 
@@ -39,6 +28,20 @@ def on_message(client, userdata, message):
 
     
 def callClassifier():    
+    i=0
+    ctr=0
+    completeSwingI=0
+    noMotion = True
+    downSwing = False
+    backswing = False
+    completeSwing = False
+    
+    
+    x=list()
+    powerList = []
+    List =[]
+    
+    
     # 1. create a client instance.
     client1 = mqtt.Client()
     # add additional client options (security, certifications, etc.)
