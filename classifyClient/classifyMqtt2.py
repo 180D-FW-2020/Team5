@@ -40,19 +40,19 @@ def on_message(client, userdata, message):
     
 def callClassifier():    
     # 1. create a client instance.
-    client = mqtt.Client()
+    client1 = mqtt.Client()
     # add additional client options (security, certifications, etc.)
     # many default options should be good to start off.
     # add callbacks to client.
 
-    client.on_connect = on_connect
-    client.on_disconnect = on_disconnect
-    client.on_message = on_message
+    client1.on_connect = on_connect
+    client1.on_disconnect = on_disconnect
+    client1.on_message = on_message
 
     # 2. connect to a broker using one of the connect*() functions.
-    client.connect_async('mqtt.eclipse.org')
+    #client.connect_async('mqtt.eclipse.org')
 
-    client.loop_start()
+    client1.loop_start()
     #client.publish('ece180d/test', float(np.random.random(1)), qos=1)
     ################### MQTT SETUP ###################
 
@@ -91,7 +91,7 @@ def callClassifier():
                     print(powerList)
                     print("SWING POWER: " + str(max(powerList)))
 
-                    client.publish('ece180da_team5', str(max(powerList)), qos=1)
+                    client1.publish('ece180da_team5', str(max(powerList)), qos=1)
 
                     powerList.clear()
                     backSwing = False
@@ -145,7 +145,7 @@ def callClassifier():
 
 
     ################### MQTT END ###################
-    client.loop_stop()
-    client.disconnect()
+    client1.loop_stop()
+    client1.disconnect()
     ################### MQTT END ###################
 

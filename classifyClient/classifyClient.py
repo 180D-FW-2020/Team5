@@ -1,5 +1,6 @@
 import time
 import importTest
+import classifyMqtt2
 
 import paho.mqtt.client as mqtt
 
@@ -17,7 +18,8 @@ def on_disconnect(client, userdata, rc):
 
 def on_message(client, userdata, message):
     print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
-    importTest.callFile()
+    classifyMqtt2.callClassifier()
+    #importTest.callFile()
     #message1 = str(message.payload)
 
 client = mqtt.Client()
@@ -31,7 +33,8 @@ client.loop_start()
 
 
 while True:
-    print('jonjon')
+    pass
+    #print('jonjon')
     #print(message1)
     #importTest.callFile()
     
