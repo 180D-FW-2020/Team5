@@ -56,11 +56,11 @@ def callClassifier():
                     print("SWING POWER: " + str(max(powerList)))
 
                     client.publish('ece180da/test', str(max(powerList)), qos=1)
-
                     powerList.clear()
                     backSwing = False
                     downSwing = False
                     completeSwing = False
+                    return
 
             if(ACCx<restingPlace+350 and ACCx>restingPlace-350):   # variable threshold value, good for different stances
                 print("No Motion Detected")
