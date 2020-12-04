@@ -156,9 +156,9 @@ def on_disconnect(client, userdata, rc):
 
 def on_message(client, userdata, message):
     print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
-    if(str(message.payload)=="startClassifier")
+    if(str(message.payload)=="startClassifier"):
         callClassifier()
-    if(str(message.payload)=="startButtons")
+    if(str(message.payload)=="startButtons"):
         callButtons()
     
 
