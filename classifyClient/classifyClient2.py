@@ -9,6 +9,7 @@ import numpy as np
 import gpiozero
 
 
+################### BUTTONS ###################
 def callButtons():
     # To recognize gpiozero commands, install gpiozero
     # with the command 'pip3 install gpiozero'
@@ -42,6 +43,10 @@ def callButtons():
             print("Right Button Released\n")
             right_flag = False
 
+################### BUTTONS ###################
+            
+            
+            
 
 ################### CLASSIFIER ###################
 def callClassifier():    
