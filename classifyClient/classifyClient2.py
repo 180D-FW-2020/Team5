@@ -6,6 +6,41 @@ import datetime
 import os
 import paho.mqtt.client as mqtt
 import numpy as np
+import gpiozero
+
+
+def callButtons():
+    # To recognize gpiozero commands, install gpiozero
+    # with the command 'pip3 install gpiozero'
+    left_flag = False
+    right_flag = False
+    run_sequence = True
+
+    left_button = gpiozero.DigitalInputDevice(17)
+    right_button = gpiozero.DigitalInputDevice(27)
+
+    while run_sequence == True:
+
+        if left_button.value == 1 and left_flag == True and right_button.value == 1 and right_flag == True:
+            print("Direction Control Period Completed")
+            run_sequence = False
+            return
+
+        elif left_button.value  == 1 and  left_flag == False:
+            print("Left Button Pressed\n")
+            left_flag = True
+            
+        elif left_button.value == 0 and left_flag == True:
+            print("Left Button Released\n")
+            left_flag = False
+
+        elif right_button.value == 1 and right_flag == False:
+            print("Right Button Pressed\n")
+            right_flag = True
+            
+        elif right_button.value == 0 and right_flag == True:
+            print("Right Button Released\n")
+            right_flag = False
 
 
 ################### CLASSIFIER ###################
@@ -55,7 +90,7 @@ def callClassifier():
                     print(powerList)
                     print("SWING POWER: " + str(max(powerList)))
 
-                    client.publish('ece180da/test', str(max(powerList)), qos=1)
+                    client.publish('ece180da/test', "classifierData" + str(max(powerList)), qos=1)
                     powerList.clear()
                     backSwing = False
                     downSwing = False
@@ -111,7 +146,7 @@ def callClassifier():
 ################### MQTT ###################
 def on_connect(client, userdata, flags, rc):
     print("Connection returned result: "+str(rc))
-    client.subscribe("ece180d/test", qos=1)
+    client.subscribe("ece180d_team5", qos=1)
 
 def on_disconnect(client, userdata, rc):
     if rc != 0:
@@ -121,10 +156,11 @@ def on_disconnect(client, userdata, rc):
 
 def on_message(client, userdata, message):
     print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
-    callClassifier()
-    #classifyMqtt2.callClassifier()
-    #importTest.callFile()
-    #message1 = str(message.payload)
+    if(str(message.payload)=="startClassifier")
+        callClassifier()
+    if(str(message.payload)=="startButtons")
+        callButtons()
+    
 
 client = mqtt.Client()
 client.on_connect = on_connect
