@@ -78,13 +78,13 @@ def callClassifier():
 
 
     ######JON
-        if(i==25):
+        if(i==40):
             restingPlace = myACC
             print("RESTING VALUE: " + str(restingPlace))
 
         myACC = IMU.readACCx()
 
-        if(i>=25):
+        if(i>=40):
             if(completeSwing==True):
                 if(completeSwingI+7 == i):
                     print(powerList)
