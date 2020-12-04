@@ -90,7 +90,7 @@ def callClassifier():
                     print(powerList)
                     print("SWING POWER: " + str(max(powerList)))
 
-                    client.publish('ece180da/test', "classifierData" + str(max(powerList)), qos=1)
+                    client.publish('ece180da_team5', "classifierData," + str(max(powerList)), qos=1)
                     powerList.clear()
                     backSwing = False
                     downSwing = False
@@ -146,7 +146,7 @@ def callClassifier():
 ################### MQTT ###################
 def on_connect(client, userdata, flags, rc):
     print("Connection returned result: "+str(rc))
-    client.subscribe("ece180d_team5", qos=1)
+    client.subscribe("ece180da_team5", qos=1)
 
 def on_disconnect(client, userdata, rc):
     if rc != 0:
