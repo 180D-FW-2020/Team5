@@ -112,6 +112,12 @@ def callClassifier():
 
 
     ######JON
+        if(i==2):
+            print("CALIBRATING!!! You have 5 seconds until Classification")
+            
+        if(i<40 and i>15):
+            print("CALIBRATING: " + str(restingPlace))
+        
         if(i==40):
             restingPlace = myACC
             print("RESTING VALUE: " + str(restingPlace))
