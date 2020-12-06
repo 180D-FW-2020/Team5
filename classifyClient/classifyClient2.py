@@ -1,3 +1,8 @@
+# with the command 'pip3 install gpiozero'
+#pip install RPi.GPIO
+#pip3 install RPIO
+#pip3 install pigpio
+
 import sys
 import time
 import math
