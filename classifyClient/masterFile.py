@@ -13,6 +13,7 @@ import paho.mqtt.client as mqtt
 import numpy as np
 import gpiozero
 
+i=0;
 
 ################### BUTTONS ###################
 def callButtons():
@@ -219,7 +220,7 @@ client.loop_start()
 
 
 while True:
-    pass
+    print("Waiting on Unity request")
     
 client.loop_stop()
 client.disconnect()  
