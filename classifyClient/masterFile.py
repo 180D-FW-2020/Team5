@@ -214,7 +214,8 @@ client.on_connect = on_connect
 client.on_disconnect = on_disconnect
 client.on_message = on_message
 
-client.connect_async('mqtt.eclipse.org')
+#client.connect_async('mqtt.eclipse.org')
+client.connect_async('broker.hivemq.com')
 
 client.loop_start()
 
