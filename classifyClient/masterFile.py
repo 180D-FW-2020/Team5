@@ -220,7 +220,7 @@ client.loop_start()
 
 
 while True:
-    print("Waiting on Unity request")
+    pass
     
 client.loop_stop()
 client.disconnect()  
