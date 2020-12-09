@@ -55,7 +55,7 @@ def on_message(client, userdata, message):
     print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
     print(message.payload.decode("UTF-8"))
     if(message.payload.decode("UTF-8")=="startPose"):
-        callClassifier()
+        callPose()
     
 
 client = mqtt.Client()
