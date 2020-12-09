@@ -186,6 +186,8 @@ def callClassifier():
 
         List.append(round(ACCx,3))
         i+=1
+    print("COMPLETE SWING NOT DETECTED")
+    client.publish('ece180da_team5', "noSwing", qos=1)
 ################### CLASSIFIER ###################
 
 
