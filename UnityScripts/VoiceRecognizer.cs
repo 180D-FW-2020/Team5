@@ -11,7 +11,7 @@ public class VoiceRecognizer : MonoBehaviour
     private KeywordRecognizer keywordRecognizer;
     private Dictionary<string, Action> actions = new Dictionary<string, Action>();
 
-    public Text voicedText = null;
+    public ChatBoxManager chatBoxManager;
 
     void Start()
     {
@@ -26,7 +26,7 @@ public class VoiceRecognizer : MonoBehaviour
         keywordRecognizer = new KeywordRecognizer(actions.Keys.ToArray());
         keywordRecognizer.OnPhraseRecognized += RecognizedSpeech;
         keywordRecognizer.Start();
-        Debug.Log("listening!");
+        Debug.Log("Listening for speech...");
     }
 
     private void RecognizedSpeech(PhraseRecognizedEventArgs speech)
@@ -37,32 +37,32 @@ public class VoiceRecognizer : MonoBehaviour
 
     private void GoodJob()
     {
-        voicedText.text = "you said: Good Job!";
+        chatBoxManager.SendMessageToChat("You: Good Job!");
     }
 
     private void GoodGame()
     {
-        voicedText.text = "you said: Good Game!";
+        chatBoxManager.SendMessageToChat("You: Good Game!");
     }
 
     private void LetsGo()
     {
-        voicedText.text = "you said: Let's go!";
+        chatBoxManager.SendMessageToChat("You: Let's go!");
     }
 
     private void Yes()
     {
-        voicedText.text = "you said: Yes!";
+        chatBoxManager.SendMessageToChat("You: Yes!");
     }
 
     private void No()
     {
-        voicedText.text = "you said: No!";
+        chatBoxManager.SendMessageToChat("You: No!");
     }
 
     private void NicePutt()
     {
-        voicedText.text = "you said: Nice Putt!";
+        chatBoxManager.SendMessageToChat("You: Nice Putt!");
     }
 
 }
