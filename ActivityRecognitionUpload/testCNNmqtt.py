@@ -76,7 +76,7 @@ client.loop_start()
 while True:
     #print(client.message)
     if (client.message == "startPose"):
-        callClassifier()
+        callPose()
     pass
     
 client.loop_stop()
