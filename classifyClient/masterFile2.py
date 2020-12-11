@@ -48,6 +48,7 @@ def callButtons():
             client.publish('ece180da_team5', "endButtons", qos=1)
             print("Direction Control Completed\n")
             run_sequence = False        
+            return
 
         elif left_button.value  == 1 and  left_press == False:
             #print("Left Button Pressed\n")
