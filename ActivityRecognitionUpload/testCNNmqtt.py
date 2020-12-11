@@ -30,8 +30,8 @@ def callPose():
         if prediction[0][1] > .01: 
             ###MQTT CODE HERE 
             client.publish('ece180da_team5', "poseOK", qos=1)
-            
-            print('OK to Putt!')
+            print('Detected Pose')
+            return
         iter+=1
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
