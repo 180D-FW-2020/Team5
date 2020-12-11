@@ -24,6 +24,7 @@ while True:
     testDataFinal = np.reshape(testDataArray,(len(testDataArray),75,1))
     prediction = model.predict(testDataFinal)
     # Decide to transmit over MQTT 
+    print(prediction[0][1])
     if prediction[0][1] > .01: 
         ###MQTT CODE HERE 
         print('OK to Putt!')
@@ -31,6 +32,6 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-cv2.release()
+cap.release()
 cv2.destroyAllWindows()
 

@@ -36,7 +36,7 @@ def callPose():
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    cv2.release()
+    cap.release()
     cv2.destroyAllWindows()
     
     
