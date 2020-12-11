@@ -54,14 +54,18 @@ def on_disconnect(client, userdata, rc):
 def on_message(client, userdata, message):
     print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
     print(message.payload.decode("UTF-8"))
-    if(message.payload.decode("UTF-8")=="startPose"):
-        callPose()
+    client.message = message.payload.decode("UTF-8")
+    #if(message.payload.decode("UTF-8")=="startClassifier"):
+    #    callClassifier()
+    #if(message.payload.decode("UTF-8")=="startButtons"):
+    #    callButtons()
     
 
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_disconnect = on_disconnect
 client.on_message = on_message
+client.message = ""
 
 #client.connect_async('mqtt.eclipse.org')
 client.connect_async('broker.hivemq.com')
@@ -70,6 +74,9 @@ client.loop_start()
 
 
 while True:
+    #print(client.message)
+    if (client.message == "startPose"):
+        callClassifier()
     pass
     
 client.loop_stop()
