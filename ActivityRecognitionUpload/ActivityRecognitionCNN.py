@@ -54,13 +54,12 @@ history = model.fit(trainarraydatanew, trainarraylabels,validation_split=.2, shu
 
 # Training Insights
 print(history.history.keys())
+model.save('ActRecognition.h5')
 
-plt.plot(history.history['Accuracy'])
-plt.plot(history.history['val_accuracy'])
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
 plt.title('Model Training Overview')
 plt.ylabel('Accuracy')
 plt.xlabel('epoch')
 plt.legend(['train','test'], loc='upper left')
 plt.show()
-
-model.save('ActRecognition.h5')
