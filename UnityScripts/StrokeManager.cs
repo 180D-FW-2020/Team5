@@ -34,7 +34,7 @@ public class StrokeManager : MonoBehaviour
     private string MQTT_broker = "broker.hivemq.com";
 
     // 1000 ms button push = 45 degree tilt
-    private double MAX_ANGLE = 45;
+    private double MAX_ANGLE = 30;
     private double MAX_BUTTON_MS = 1000;
 
     GameObject playerBallGO;
@@ -45,6 +45,8 @@ public class StrokeManager : MonoBehaviour
 
     private bool doTilt = false;
     private int buttonPressMs = 0;
+
+    private bool initialStart = true;
 
     public Text strokeReadyStatus;
      
@@ -65,22 +67,31 @@ public class StrokeManager : MonoBehaviour
         client.Subscribe(new string[] { MQTT_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
     }
 
+    private void Publish(string message)
+    {
+        Debug.Log("publishing " + message);
+        client.Publish(MQTT_topic, System.Text.Encoding.UTF8.GetBytes(message));
+    }
+
     private void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
     {
         string receivedMessage = System.Text.Encoding.UTF8.GetString(e.Message);
         string[] parsedMessage = receivedMessage.Split(',');
         Debug.Log("Received: " + receivedMessage);
         Debug.Log(parsedMessage);
-        if (gs == GameState.AWAITING_SWING)
+        if (parsedMessage.Length == 2 && gs == GameState.AWAITING_SWING)
         {
-            whackVelocity = Convert.ToDouble(receivedMessage);
+            whackVelocity = Convert.ToDouble(parsedMessage[1]);
+            //whackVelocity = Mathf.Min((float)whackVelocity,10000.0f);
             doWhack = true;
             gs = GameState.BALL_IN_MOTION;
+            Publish("startButtons");
             return;
         }
         if (receivedMessage == "poseOK" && gs == GameState.DETECTING_POSE)
         {
             gs = GameState.AIMING_BALL;
+            Publish("startButtons");
             return;
         }
         if (gs == GameState.AIMING_BALL)
@@ -88,6 +99,7 @@ public class StrokeManager : MonoBehaviour
             if (receivedMessage == "endButtons")
             {
                 gs = GameState.AWAITING_SWING;
+                Publish("startClassifier");
                 return;
             }
             int ms_held = -1;
@@ -132,6 +144,10 @@ public class StrokeManager : MonoBehaviour
 
     private void setDisplayString(GameState currentGameState)
     {
+        // Haven't found strokeReadyStatus yet
+        if (strokeReadyStatus == null)
+            return;
+
         switch(currentGameState)
         {
             case GameState.AIMING_BALL:
@@ -153,6 +169,16 @@ public class StrokeManager : MonoBehaviour
 
     }
 
+    private float convertVelocity(float velocity)
+    {
+        Debug.Log("velocity:");
+        Debug.Log(velocity);
+        float foo = velocity;
+        foo = Mathf.Max(foo, 7000.0f);
+        foo = Mathf.Min(foo, 32000.0f);
+        return ((foo - 7000.0f) * 8.0f / (30000.0f - 7000.0f));
+    }
+
     // Update is called once per frame -- use this for inputs
     private void Update()
     {
@@ -165,6 +191,12 @@ public class StrokeManager : MonoBehaviour
         if (playerBallRB == null)
         {
             return;
+        }
+
+        if (initialStart)
+        {
+            Publish("startPose");
+            initialStart = false;
         }
 
         // we must do this, otherwise the ball will not stop very fast
@@ -181,7 +213,9 @@ public class StrokeManager : MonoBehaviour
             forwardWithoutY[1] = 0.0f;
             forwardWithoutY = Vector3.Normalize(forwardWithoutY);
 
-            playerBallRB.AddForce(forwardWithoutY * (float)whackVelocity, ForceMode.Impulse);
+            Debug.Log(convertVelocity((float)whackVelocity));
+
+            playerBallRB.AddForce(forwardWithoutY * convertVelocity((float)whackVelocity), ForceMode.Impulse);
         }
         else if (gs == GameState.BALL_IN_MOTION)
         {
