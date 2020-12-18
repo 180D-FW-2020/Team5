@@ -17,11 +17,11 @@ public class VoiceRecognizer : MonoBehaviour
     {
 
         actions.Add("good job", GoodJob);
-        actions.Add("good game", GoodGame);
         actions.Add("let's go", LetsGo);
         actions.Add("yes", Yes);
         actions.Add("no", No);
         actions.Add("nice putt", NicePutt);
+        actions.Add("gee gee", GG);
 
         keywordRecognizer = new KeywordRecognizer(actions.Keys.ToArray());
         keywordRecognizer.OnPhraseRecognized += RecognizedSpeech;
@@ -40,11 +40,6 @@ public class VoiceRecognizer : MonoBehaviour
         chatBoxManager.SendMessageToChat("You: Good Job!");
     }
 
-    private void GoodGame()
-    {
-        chatBoxManager.SendMessageToChat("You: Good Game!");
-    }
-
     private void LetsGo()
     {
         chatBoxManager.SendMessageToChat("You: Let's go!");
@@ -52,6 +47,7 @@ public class VoiceRecognizer : MonoBehaviour
 
     private void Yes()
     {
+        Debug.Log("Sending \"Yes\" to chat");
         chatBoxManager.SendMessageToChat("You: Yes!");
     }
 
@@ -63,6 +59,11 @@ public class VoiceRecognizer : MonoBehaviour
     private void NicePutt()
     {
         chatBoxManager.SendMessageToChat("You: Nice Putt!");
+    }
+
+    private void GG()
+    {
+        chatBoxManager.SendMessageToChat("You: GG");
     }
 
 }
