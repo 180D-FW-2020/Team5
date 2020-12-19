@@ -13,6 +13,7 @@ import paho.mqtt.client as mqtt
 import numpy as np
 import gpiozero
 
+i=0;
 
 ################### BUTTONS ###################
 def callButtons():
@@ -47,6 +48,7 @@ def callButtons():
             client.publish('ece180da_team5', "endButtons", qos=1)
             print("Direction Control Completed\n")
             run_sequence = False        
+            return
 
         elif left_button.value  == 1 and  left_press == False:
             #print("Left Button Pressed\n")
@@ -185,6 +187,8 @@ def callClassifier():
 
         List.append(round(ACCx,3))
         i+=1
+    print("COMPLETE SWING NOT DETECTED")
+    client.publish('ece180da_team5', "noSwing", qos=1)
 ################### CLASSIFIER ###################
 
 
@@ -213,7 +217,8 @@ client.on_connect = on_connect
 client.on_disconnect = on_disconnect
 client.on_message = on_message
 
-client.connect_async('mqtt.eclipse.org')
+#client.connect_async('mqtt.eclipse.org')
+client.connect_async('broker.hivemq.com')
 
 client.loop_start()
 
@@ -224,4 +229,3 @@ while True:
 client.loop_stop()
 client.disconnect()  
 ################### MQTT ###################
-
