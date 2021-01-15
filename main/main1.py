@@ -15,6 +15,12 @@ import gpiozero
 
 i=0
 
+print(str(sys.argv[1]))
+
+topicName = str(sys.argv[1])
+playerName = str(sys.argv[2])
+
+
 ################### BUTTONS ###################
 def callButtons():
     left_press = False
@@ -207,10 +213,6 @@ def on_message(client, userdata, message):
     print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
     print(message.payload.decode("UTF-8"))
     client.message = message.payload.decode("UTF-8")
-    #if(message.payload.decode("UTF-8")=="startClassifier"):
-    #    callClassifier()
-    #if(message.payload.decode("UTF-8")=="startButtons"):
-    #    callButtons()
     
 
 client = mqtt.Client()
