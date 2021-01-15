@@ -6,7 +6,7 @@
 import sys
 import time
 import math
-import IMU
+#import IMU
 import datetime
 import os
 import paho.mqtt.client as mqtt
@@ -14,9 +14,6 @@ import numpy as np
 import gpiozero
 
 i=0
-
-print(str(sys.argv[1]))
-
 topicName = str(sys.argv[1])
 playerName = str(sys.argv[2])
 
@@ -51,7 +48,7 @@ def callButtons():
             right_max = True
 
         if left_button.value == 1 and left_press == True and right_button.value == 1 and right_press == True:
-            client.publish('ece180da_team5', "endButtons", qos=1)
+            client.publish(topicName, playerName + ",endButtons", qos=1)
             print("Direction Control Completed\n")
             run_sequence = False        
             return
@@ -67,7 +64,7 @@ def callButtons():
             t_Left_end = int(round(time.time()*1000))
             t_Left = t_Left_end - t_Left_start
             #print("Left Button Released, Time: {}\n".format(t_Left))
-            client.publish('ece180da_team5', "turn,left," + str(t_Left), qos=1)
+            client.publish(topicName, playerName + ",turn,left," + str(t_Left), qos=1)
             print("turn,left,{}\n".format(t_Left))
 
         elif right_button.value == 1 and right_press == False:
@@ -81,12 +78,9 @@ def callButtons():
             t_Right_end = int(round(time.time()*1000))
             t_Right = t_Right_end - t_Right_start
             #print("Right Button Released, Time: {}\n".format(t_Right))
-            client.publish('ece180da_team5', "turn,right," + str(t_Right), qos=1)
+            client.publish(topicName, playerName + ",turn,right," + str(t_Right), qos=1)
             print("turn,right,{}\n".format(t_Right))
-
-
 ################### BUTTONS ###################
-            
             
             
 
@@ -143,7 +137,7 @@ def callClassifier():
                     print(powerList)
                     print("SWING POWER: " + str(max(powerList)))
 
-                    client.publish('ece180da_team5', "classifierData," + str(max(powerList)), qos=1)
+                    client.publish(topicName, playerName + ",classifierData," + str(max(powerList)), qos=1)
                     powerList.clear()
                     backSwing = False
                     downSwing = False
@@ -194,14 +188,16 @@ def callClassifier():
         List.append(round(ACCx,3))
         i+=1
     print("COMPLETE SWING NOT DETECTED")
-    client.publish('ece180da_team5', "noSwing", qos=1)
+    client.publish(topicName, playerName + ",noSwing", qos=1)
 ################### CLASSIFIER ###################
+
 
 
 ################### MQTT ###################
 def on_connect(client, userdata, flags, rc):
     print("Connection returned result: "+str(rc))
-    client.subscribe("ece180da_team5", qos=1)
+    client.subscribe(topicName, qos=1)
+    client.publish(topicName, "playerName," + playerName, qos=1)
 
 def on_disconnect(client, userdata, rc):
     if rc != 0:
@@ -229,9 +225,9 @@ client.loop_start()
 
 while True:
     #print(client.message)
-    if (client.message == "startClassifier"):
+    if (client.message == playerName + "startClassifier"):
         callClassifier()
-    if (client.message == "startButtons"):
+    if (client.message == playerName + "startButtons"):
         callButtons()
     pass
     
