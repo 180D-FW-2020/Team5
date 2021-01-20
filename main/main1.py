@@ -6,7 +6,7 @@
 import sys
 import time
 import math
-#import IMU
+import IMU
 import datetime
 import os
 import paho.mqtt.client as mqtt
