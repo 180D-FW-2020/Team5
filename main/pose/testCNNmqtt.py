@@ -9,6 +9,8 @@ import os
 import time
 import paho.mqtt.client as mqtt
 
+topicName = str(sys.argv[1])
+playerName = str(sys.argv[2])
 
 def callPose():
     model = load_model('ActRecognition.h5')
@@ -31,7 +33,7 @@ def callPose():
             spredict = prediction[i][1]
             if spredict > 1e-12 and spredict < 1e-2 and spredict != 0: 
                 ###MQTT CODE HERE 
-                client.publish('ece180da_team5', "poseOK", qos=1)
+                client.publish(topicName, playerName + ",poseOK", qos=1)
                 print('Detected Pose')
                 return
         iter+=1
@@ -45,7 +47,8 @@ def callPose():
 ################### MQTT ###################
 def on_connect(client, userdata, flags, rc):
     print("Connection returned result: "+str(rc))
-    client.subscribe("ece180da_team5", qos=1)
+    client.subscribe(topicName, qos=1)
+    #client.publish(topicName, "playerName," + playerName, qos=1)
 
 def on_disconnect(client, userdata, rc):
     if rc != 0:
@@ -57,10 +60,6 @@ def on_message(client, userdata, message):
     print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
     print(message.payload.decode("UTF-8"))
     client.message = message.payload.decode("UTF-8")
-    #if(message.payload.decode("UTF-8")=="startClassifier"):
-    #    callClassifier()
-    #if(message.payload.decode("UTF-8")=="startButtons"):
-    #    callButtons()
     
 
 client = mqtt.Client()
@@ -77,7 +76,7 @@ client.loop_start()
 
 while True:
     #print(client.message)
-    if (client.message == "startPose"):
+    if (client.message == playerName + "startPose"):
         callPose()
     pass
     
