@@ -225,9 +225,9 @@ client.loop_start()
 
 while True:
     #print(client.message)
-    if (client.message == playerName + "startClassifier"):
+    if (client.message == playerName + ",startClassifier"):
         callClassifier()
-    if (client.message == playerName + "startButtons"):
+    if (client.message == playerName + ",startButtons"):
         callButtons()
     pass
     
