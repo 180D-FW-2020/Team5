@@ -192,6 +192,12 @@ def callClassifier():
 ################### CLASSIFIER ###################
 
 
+###################### POSE ######################
+def callPose():
+    time.sleep(3)
+    client.publish(topicName, playerName + ",poseOK", qos=1)
+###################### POSE ######################
+
 
 ################### MQTT ###################
 def on_connect(client, userdata, flags, rc):
@@ -231,6 +237,8 @@ while True:
         #print("beforebut")
         callButtons()
         #print("afterbut")
+    if (client.message == playerName + ",startPose"):
+        callPose()
     pass
     
 client.loop_stop()
