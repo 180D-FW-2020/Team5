@@ -228,9 +228,9 @@ while True:
     if (client.message == playerName + ",startClassifier"):
         callClassifier()
     if (client.message == playerName + ",startButtons"):
-        print("beforebut")
+        #print("beforebut")
         callButtons()
-        print("afterbut")
+        #print("afterbut")
     pass
     
 client.loop_stop()
