@@ -189,8 +189,10 @@ def callClassifier():
 
 ###################### POSE ######################
 def callPose():
+    print("\nWaiting for Valid Pose...")
     time.sleep(3)
     client.publish(topicName, playerName + ",poseOK", qos=1)
+    return
 ###################### POSE ######################
 
 
