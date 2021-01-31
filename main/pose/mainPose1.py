@@ -26,8 +26,8 @@ def clearFiles():
             print("Error: %s : %s" % (f, e.strerror))
             
 def clearCSV():
-    os.remove('outfile.csv') #rename to correct csv file name
-    with open('persons.csv', 'wb') as csvfile
+    os.remove('TestData.csv') #rename to correct csv file name
+    with open('TestData.csv', 'wb') as csvfile #rename to correct csv file name
 
 
 def callPose():
