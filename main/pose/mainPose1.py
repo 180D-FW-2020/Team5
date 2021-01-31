@@ -15,9 +15,8 @@ topicName = str(sys.argv[1])
 playerName = str(sys.argv[2])
 
 
-
 def clearFiles():
-    files = glob.glob('/tmp/**/*.json', recursive=True) # insert path to the json directories, keep the /**/*.json 
+    files = glob.glob('C:/Users/jonry/Desktop/testpystuff/**/*.json', recursive=True) # insert path to the json directories, keep the /**/*.json 
 
     for f in files:
         try:
@@ -27,7 +26,8 @@ def clearFiles():
             
 def clearCSV():
     os.remove('TestData.csv') #rename to correct csv file name
-    with open('TestData.csv', 'wb') as csvfile #rename to correct csv file name
+    with open('TestData.csv', 'w') as my_empty_csv: #rename to correct csv file name
+        pass
 
 
 def callPose():
