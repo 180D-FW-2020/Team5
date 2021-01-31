@@ -8,9 +8,27 @@ import numpy as np
 import os
 import time
 import paho.mqtt.client as mqtt
+import glob
+import csv
 
 topicName = str(sys.argv[1])
 playerName = str(sys.argv[2])
+
+
+
+def clearFiles():
+    files = glob.glob('/tmp/**/*.json', recursive=True) # insert path to the json directories, keep the /**/*.json 
+
+    for f in files:
+        try:
+            os.remove(f)
+        except OSError as e:
+            print("Error: %s : %s" % (f, e.strerror))
+            
+def clearCSV():
+    os.remove('outfile.csv') #rename to correct csv file name
+    with open('persons.csv', 'wb') as csvfile
+
 
 def callPose():
     model = load_model('ActRecognition.h5')
@@ -77,6 +95,8 @@ client.loop_start()
 while True:
     #print(client.message)
     if (client.message == playerName + "startPose"):
+        clearFiles()
+        clearCSV()
         callPose()
     pass
     
