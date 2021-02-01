@@ -234,12 +234,11 @@ while True:
         callClassifier()
         client.message=""
     if (client.message == playerName + ",startButtons"):
-        #print("beforebut")
         callButtons()
-        #print("afterbut")
+        client.message=""
     if (client.message == playerName + ",startPose"):
         callPose()
-    #client.message=""
+        client.message=""
     pass
     
 client.loop_stop()
