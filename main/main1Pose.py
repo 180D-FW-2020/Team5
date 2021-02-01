@@ -201,6 +201,7 @@ def callPose():
 def on_connect(client, userdata, flags, rc):
     print("Connection returned result: "+str(rc))
     print("Connected To Topic: " + topicName + " As " + playerName)
+    print("\n")
     client.subscribe(topicName, qos=1)
     client.publish(topicName, "playerName," + playerName, qos=1)
 
