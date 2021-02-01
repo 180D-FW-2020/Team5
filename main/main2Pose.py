@@ -9,8 +9,13 @@ import numpy as np
 import gpiozero
 
 i=0
-topicName = str(sys.argv[1])
-playerName = str(sys.argv[2])
+
+print('Enter The Lobby Code:')
+topicName = input()
+print('Enter Your Nickname:')
+topicName = input()
+#topicName = str(sys.argv[1])
+#playerName = str(sys.argv[2])
 
 
 ################### BUTTONS ###################
@@ -192,6 +197,7 @@ def callClassifier():
 def callPose():
     print("\nWaiting for Valid Pose...")
     time.sleep(3)
+    print("\nDETECTED VALID POSE")
     client.publish(topicName, playerName + ",poseOK", qos=1)
     return
 ###################### POSE ######################
@@ -200,7 +206,7 @@ def callPose():
 ################### MQTT ###################
 def on_connect(client, userdata, flags, rc):
     print("Connection returned result: "+str(rc))
-    print("Connected To Topic: " + topicName + " As " + playerName)
+    print("Connected To Topic: " + topicName + " As " + playerName + "\n")
     client.subscribe(topicName, qos=1)
     client.publish(topicName, "playerName," + playerName, qos=1)
 
@@ -211,16 +217,9 @@ def on_disconnect(client, userdata, rc):
         print('Expected Disconnect')
 
 def on_message(client, userdata, message):
-    print('\nReceived message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
-    print(message.payload.decode("UTF-8"))
+    print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
+    print(message.payload.decode("UTF-8") + "\n")
     client.message = message.payload.decode("UTF-8")
-    
-    if (client.message == playerName + ",startClassifier"):
-        callClassifier()
-    if (client.message == playerName + ",startButtons"):
-        callButtons()
-    if (client.message == playerName + ",startPose"):
-        callPose()
     
 
 client = mqtt.Client()
@@ -237,7 +236,15 @@ client.loop_start()
 
 while True:
     #print(client.message)
-    #client.message=""
+    if (client.message == playerName + ",startClassifier"):
+        callClassifier()
+        client.message=""
+    if (client.message == playerName + ",startButtons"):
+        callButtons()
+        client.message=""
+    if (client.message == playerName + ",startPose"):
+        callPose()
+        client.message=""
     pass
     
 client.loop_stop()
