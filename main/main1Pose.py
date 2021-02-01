@@ -201,7 +201,6 @@ def callPose():
 def on_connect(client, userdata, flags, rc):
     print("Connection returned result: "+str(rc))
     print("Connected To Topic: " + topicName + " As " + playerName)
-    print("\n")
     client.subscribe(topicName, qos=1)
     client.publish(topicName, "playerName," + playerName, qos=1)
 
@@ -212,7 +211,7 @@ def on_disconnect(client, userdata, rc):
         print('Expected Disconnect')
 
 def on_message(client, userdata, message):
-    print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
+    print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos) + "\n")
     print(message.payload.decode("UTF-8"))
     client.message = message.payload.decode("UTF-8")
     
