@@ -183,7 +183,7 @@ def callClassifier():
         List.append(round(ACCx,3))
         i+=1
     print("COMPLETE SWING NOT DETECTED")
-    client.publish(topicName, playerName + ",classifierData,0"), qos=1)
+    client.publish(topicName, playerName + ",classifierData,0", qos=1)
     print("Your Turn Was Skipped Due To Inactivity")
 ################### CLASSIFIER ###################
 
