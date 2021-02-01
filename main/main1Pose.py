@@ -232,6 +232,7 @@ while True:
     #print(client.message)
     if (client.message == playerName + ",startClassifier"):
         callClassifier()
+        client.message=""
     if (client.message == playerName + ",startButtons"):
         #print("beforebut")
         callButtons()
