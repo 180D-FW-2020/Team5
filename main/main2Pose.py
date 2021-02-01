@@ -216,6 +216,13 @@ def on_message(client, userdata, message):
     print(message.payload.decode("UTF-8"))
     client.message = message.payload.decode("UTF-8")
     
+    if (client.message == playerName + ",startClassifier"):
+        callClassifier()
+    if (client.message == playerName + ",startButtons"):
+        callButtons()
+    if (client.message == playerName + ",startPose"):
+        callPose()
+    
 
 client = mqtt.Client()
 client.on_connect = on_connect
@@ -231,14 +238,6 @@ client.loop_start()
 
 while True:
     #print(client.message)
-    if (client.message == playerName + ",startClassifier"):
-        callClassifier()
-    if (client.message == playerName + ",startButtons"):
-        #print("beforebut")
-        callButtons()
-        #print("afterbut")
-    if (client.message == playerName + ",startPose"):
-        callPose()
     #client.message=""
     pass
     
