@@ -239,7 +239,7 @@ while True:
         #print("afterbut")
     if (client.message == playerName + ",startPose"):
         callPose()
-    client.message=""
+    #client.message=""
     pass
     
 client.loop_stop()
