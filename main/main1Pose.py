@@ -211,8 +211,8 @@ def on_disconnect(client, userdata, rc):
         print('Expected Disconnect')
 
 def on_message(client, userdata, message):
-    print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos) + "\n")
-    print(message.payload.decode("UTF-8"))
+    print('Received message: "' + str(message.payload) + '" on topic "' + message.topic + '" with QoS ' + str(message.qos))
+    print(message.payload.decode("UTF-8") + "\n")
     client.message = message.payload.decode("UTF-8")
     
 
