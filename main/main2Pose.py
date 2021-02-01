@@ -13,7 +13,7 @@ i=0
 print('Enter The Lobby Code:')
 topicName = input()
 print('Enter Your Nickname:')
-topicName = input()
+playerName = input()
 #topicName = str(sys.argv[1])
 #playerName = str(sys.argv[2])
 
