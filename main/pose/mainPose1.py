@@ -11,8 +11,10 @@ import paho.mqtt.client as mqtt
 import glob
 import csv
 
-topicName = str(sys.argv[1])
-playerName = str(sys.argv[2])
+print('Enter The Lobby Code:')
+topicName = input()
+print('Enter Your Nickname:')
+playerName = input()
 
 
 def clearFiles():
