@@ -242,9 +242,6 @@ while True:
     if (client.message == playerName + ",startButtons"):
         callButtons()
         client.message=""
-    if (client.message == playerName + ",startPose"):
-        callPose()
-        client.message=""
     pass
     
 client.loop_stop()
