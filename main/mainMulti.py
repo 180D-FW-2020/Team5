@@ -9,8 +9,13 @@ import numpy as np
 import gpiozero
 
 i=0
-topicName = str(sys.argv[1])
-playerName = str(sys.argv[2])
+
+print('Enter The Lobby Code:')
+topicName = input()
+print('Enter Your Nickname:')
+playerName = input()
+#topicName = str(sys.argv[1])
+#playerName = str(sys.argv[2])
 
 
 ################### BUTTONS ###################
@@ -200,7 +205,7 @@ def callPose():
 
 ################### MQTT ###################
 def on_connect(client, userdata, flags, rc):
-    print("Connection returned result: "+str(rc))
+    print("\nConnection returned result: "+str(rc))
     print("Connected To Topic: " + topicName + " As " + playerName + "\n")
     client.subscribe(topicName, qos=1)
     client.publish(topicName, "playerName," + playerName, qos=1)
@@ -237,9 +242,9 @@ while True:
     if (client.message == playerName + ",startButtons"):
         callButtons()
         client.message=""
-    #if (client.message == playerName + ",startPose"):
-        #callPose()
-        #client.message=""
+    if (client.message == playerName + ",startPose"):
+        callPose()
+        client.message=""
     pass
     
 client.loop_stop()
