@@ -51,7 +51,7 @@ def callPose():
         # Decide whether to transmit over MQTT 
         for i in range(iter+10,len(prediction)):
             spredict = prediction[i][1]
-            if spredict > 1e-12 and spredict < 1e-2 and spredict != 0: 
+            if spredict > 1e-11 and spredict != 0: 
                 ###MQTT CODE HERE 
                 client.publish(topicName, playerName + ",poseOK", qos=1)
                 print('Detected Pose')
