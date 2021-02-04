@@ -96,7 +96,7 @@ client.loop_start()
 
 while True:
     #print(client.message)
-    if (client.message == playerName + "startPose"):
+    if (client.message == playerName + ",startPose"):
         clearFiles()
         clearCSV()
         callPose()
