@@ -62,7 +62,7 @@ def callClassifier():
                         print(powerList)
                         print("SWING POWER: " + str(max(powerList)))
 
-                        client.publish(topicName, playerName + ",classifierData," + str(max(powerList)), qos=1)
+                        #client.publish(topicName, playerName + ",classifierData," + str(max(powerList)), qos=1)
                         powerList.clear()
                         backSwing = False
                         downSwing = False
@@ -116,7 +116,7 @@ def callClassifier():
             print("Something Went Wrong, RETRY YOUR SWING")
             pass
         print("COMPLETE SWING NOT DETECTED")
-        client.publish(topicName, playerName + ",classifierData,0", qos=1)
+        #client.publish(topicName, playerName + ",classifierData,0", qos=1)
         print("Your Turn Was Skipped Due To Inactivity")
 ################### CLASSIFIER ###################
 
