@@ -31,7 +31,7 @@ def callClassifier():
     IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-    while i<300:
+    while i<600:
         try:
             #Read the accelerometer,gyroscope and magnetometer values
             ACCx = IMU.readACCx()
@@ -67,7 +67,7 @@ def callClassifier():
                         backSwing = False
                         downSwing = False
                         completeSwing = False
-                        return
+                        #return
 
                 if(ACCx<restingPlace+350 and ACCx>restingPlace-350):   # variable threshold value, good for different stances
                     print("No Motion Detected")
