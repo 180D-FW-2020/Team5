@@ -31,7 +31,7 @@ def callClassifier():
     IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-    while i<150:
+    while i<300:
         try:
             #Read the accelerometer,gyroscope and magnetometer values
             ACCx = IMU.readACCx()
