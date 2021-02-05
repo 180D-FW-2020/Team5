@@ -10,10 +10,6 @@ import gpiozero
 
 i=0
 
-
-            
-            
-
 ################### CLASSIFIER ###################
 def callClassifier():    
     i=0
@@ -48,14 +44,12 @@ def callClassifier():
             MAGy = IMU.readMAGy()
             MAGz = IMU.readMAGz()
 
-
-        ######JON
             if(i==2):
                 print("CALIBRATING!!! You have 5 seconds until Classification")
-
+                
             if(i<40 and i>15):
                 print("CALIBRATING: " + str(myACC))
-
+            
             if(i==40):
                 restingPlace = myACC
                 print("RESTING VALUE: " + str(restingPlace))
@@ -118,14 +112,13 @@ def callClassifier():
 
             List.append(round(ACCx,3))
             i+=1
+        except:
+            print("Something Went Wrong, RETRY YOUR SWING")
+            pass
         print("COMPLETE SWING NOT DETECTED")
         client.publish(topicName, playerName + ",classifierData,0", qos=1)
         print("Your Turn Was Skipped Due To Inactivity")
-    except:
-        print("You Messed Up Somehwere, TRY AGAIN")
-        pass
 ################### CLASSIFIER ###################
 
 
 callClassifier()
-       
