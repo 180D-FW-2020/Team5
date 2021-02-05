@@ -105,7 +105,7 @@ def callClassifier():
     IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 
-    while i<150:
+    while i<300:
         try:
             #Read the accelerometer,gyroscope and magnetometer values
             ACCx = IMU.readACCx()
@@ -189,11 +189,10 @@ def callClassifier():
         except:
             print("Something Went Wrong, RETRY YOUR SWING")
             pass
-        print("COMPLETE SWING NOT DETECTED")
-        client.publish(topicName, playerName + ",classifierData,0", qos=1)
-        print("Your Turn Was Skipped Due To Inactivity")
+    print("COMPLETE SWING NOT DETECTED")
+    client.publish(topicName, playerName + ",classifierData,0", qos=1)
+    print("Your Turn Was Skipped Due To Inactivity")
 ################### CLASSIFIER ###################
-
 
 ###################### POSE ######################
 def callPose():
