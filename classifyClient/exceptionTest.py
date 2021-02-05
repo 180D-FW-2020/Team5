@@ -122,6 +122,7 @@ def callClassifier():
         client.publish(topicName, playerName + ",classifierData,0", qos=1)
         print("Your Turn Was Skipped Due To Inactivity")
     except:
+        print("You Messed Up Somehwere, TRY AGAIN")
         pass
 ################### CLASSIFIER ###################
 
