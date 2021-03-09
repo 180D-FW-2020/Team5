@@ -11,10 +11,14 @@ public class VoiceRecognizer : MonoBehaviour
     private KeywordRecognizer keywordRecognizer;
     private Dictionary<string, Action> actions = new Dictionary<string, Action>();
 
+    private MqttController mqtt;
+
     public ChatBoxManager chatBoxManager;
 
     void Start()
     {
+        // Find mqtt controller object
+        mqtt = GameObject.FindGameObjectWithTag("MqttController").GetComponent<MqttController>();
 
         actions.Add("good job", GoodJob);
         actions.Add("let's go", LetsGo);
@@ -37,33 +41,38 @@ public class VoiceRecognizer : MonoBehaviour
 
     private void GoodJob()
     {
-        chatBoxManager.SendMessageToChat("You: Good Job!");
+        //chatBoxManager.SendMessageToChat("You: Good Job!");
+        mqtt.Publish("newMessage," + mqtt.myNickname + ",Good job");
     }
 
     private void LetsGo()
     {
-        chatBoxManager.SendMessageToChat("You: Let's go!");
+        //chatBoxManager.SendMessageToChat("You: Let's go!");
+        mqtt.Publish("newMessage," + mqtt.myNickname + ",Let's go");
     }
 
     private void Yes()
     {
-        Debug.Log("Sending \"Yes\" to chat");
-        chatBoxManager.SendMessageToChat("You: Yes!");
+        //chatBoxManager.SendMessageToChat("You: Yes!");
+        mqtt.Publish("newMessage," + mqtt.myNickname + ",Yes");
     }
 
     private void No()
     {
-        chatBoxManager.SendMessageToChat("You: No!");
+        //chatBoxManager.SendMessageToChat("You: No!");
+        mqtt.Publish("newMessage," + mqtt.myNickname + ",No");
     }
 
     private void NicePutt()
     {
-        chatBoxManager.SendMessageToChat("You: Nice Putt!");
+        //chatBoxManager.SendMessageToChat("You: Nice Putt!");
+        mqtt.Publish("newMessage," + mqtt.myNickname + ",Nice putt");
     }
 
     private void GG()
     {
-        chatBoxManager.SendMessageToChat("You: GG");
+        //chatBoxManager.SendMessageToChat("You: GG");
+        mqtt.Publish("newMessage," + mqtt.myNickname + ",GG");
     }
 
 }

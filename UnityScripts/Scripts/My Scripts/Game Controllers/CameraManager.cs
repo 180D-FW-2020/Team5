@@ -10,7 +10,7 @@ public class CameraManager : MonoBehaviour
         playerBallRB = playerBall.GetComponent<Rigidbody>();
     }
 
-    public GameObject camera;
+    public GameObject cam;
     public GameObject playerBall;
     public Rigidbody playerBallRB;
 
@@ -23,7 +23,7 @@ public class CameraManager : MonoBehaviour
     void Update()
     {
 
-        camera.transform.rotation = Quaternion.Euler(cameraDownAngle, playerBall.transform.rotation.eulerAngles.y, 0);
+        cam.transform.rotation = Quaternion.Euler(cameraDownAngle, playerBall.transform.rotation.eulerAngles.y, 0);
         Vector3 normalizedForwardWithoutY = playerBall.transform.forward;
 
         // If the speed is high enough, velocity should dictate camera position
@@ -35,7 +35,7 @@ public class CameraManager : MonoBehaviour
 
         normalizedForwardWithoutY.y = 0;
         normalizedForwardWithoutY = Vector3.Normalize(normalizedForwardWithoutY);
-        camera.transform.position = playerBall.transform.position + relativePosScale * normalizedForwardWithoutY + relativePosition;
-        camera.transform.LookAt(playerBall.transform.position);
+        cam.transform.position = playerBall.transform.position + relativePosScale * normalizedForwardWithoutY + relativePosition;
+        cam.transform.LookAt(playerBall.transform.position);
     }
 }
