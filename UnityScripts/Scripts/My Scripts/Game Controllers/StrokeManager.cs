@@ -9,6 +9,8 @@ using System.Net;
 //using uPLibrary.Networking.M2Mqtt.Exceptions;
 using System;
 
+using TMPro;
+
 public class StrokeManager : MonoBehaviour
 {
 
@@ -24,6 +26,9 @@ public class StrokeManager : MonoBehaviour
 
         // Find mqtt controller object
         mqtt = GameObject.FindGameObjectWithTag("MqttController").GetComponent<MqttController>();
+
+        // Initialize name buffer for ball movement
+        moveBallToNameBuffer = "";
 
         // Error checking
         if (!playerBallGO)
@@ -45,6 +50,11 @@ public class StrokeManager : MonoBehaviour
 
         // Set initial game state
         sc.SetState(GameState.DETECTING_POSE);
+
+        resetBallRotationOnNextTick = false;
+
+        // Initialize the ball positions for each player
+        ResetAllBallPositions();
     }
 
     private Quaternion INERTIA_QUATERNION = new Quaternion(0.01f, 0.01f, 0.01f, 1.0f);
@@ -60,8 +70,18 @@ public class StrokeManager : MonoBehaviour
     private int buttonPressMs = 0;
 
     public Text strokeReadyStatus;
-     
-   
+    public TextMeshProUGUI puttingPlayer;
+
+    // Can only move ball during FixedUpdate
+    private string moveBallToNameBuffer;
+
+    private bool resetBallRotationOnNextTick;
+
+    private Dictionary<string, Vector3> ballPositions = new Dictionary<string, Vector3>();
+    private Dictionary<string, bool> playerFinishedHole = new Dictionary<string, bool>();
+    private Dictionary<string, bool> playerHasPuttedYet = new Dictionary<string, bool>();
+
+    public ScoreboardManager sbm;
 
     public void WhackBall(string whackVelocityString)
     {
@@ -94,7 +114,137 @@ public class StrokeManager : MonoBehaviour
         float foo = velocity;
         foo = Mathf.Max(foo, 7000.0f);
         foo = Mathf.Min(foo, 32000.0f);
-        return ((foo - 7000.0f) * 8.0f / (30000.0f - 7000.0f));
+        return ((foo - 7000.0f) * 15.0f / (30000.0f - 7000.0f));
+    }
+
+    public void UpdatePlayerPosition(string name, Vector3 position)
+    {
+        Debug.Log("Recording new position of player " + name + " as " + position.ToString());
+
+        ballPositions[name] = position;
+    }
+
+    public Vector3 GetPlayerPosition(string name)
+    {
+        if (name == "")
+        {
+            Debug.Log("StrokeManager.GetPlayerPosition: Empty name parameter");
+        }
+        if (ballPositions[name] == null)
+        {
+            Debug.Log("StrokeManager.GetPlayerPosition: Ball position does not exist for name " + name);
+        }
+        return ballPositions[name]; 
+    }
+
+    public void MoveBallTo(string name)
+    {
+        if (name == "")
+        {
+            Debug.Log("StrokeManager.MoveBallTo: Empty name parameter");
+        }
+        if (ballPositions[name] == null)
+        {
+            Debug.Log("StrokeManager.MoveBallTo: Ball position does not exist for name " + name);
+        }
+        moveBallToNameBuffer = name;
+
+        //Debug.Log("Moving ball to " + name + " at position " + ballPositions[name].ToString());
+        //playerBallRB.MovePosition(ballPositions[name]);
+    }
+    
+    public void ResetBallRotation()
+    {
+        playerBallRB.MoveRotation(Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+    }
+
+    public void SetPlayerFinishedHole(string name, bool hasFinished)
+    {
+        if (name == "")
+        {
+            Debug.Log("StrokeManager.SetPlayerFinishedHole: Empty name parameter");
+        }
+        if (ballPositions[name] == null)
+        {
+            Debug.Log("StrokeManager.SetPlayerFinishedHole: HasFinishedHole value does not exist for name " + name);
+        }
+        playerFinishedHole[name] = hasFinished;
+    }
+
+    public bool GetPlayerFinishedHole(string name)
+    {
+        if (name == "")
+        {
+            Debug.Log("StrokeManager.GetPlayerFinishedHole: Empty name parameter");
+        }
+        return playerFinishedHole[name];
+    }
+
+    public void SetPlayerHasPuttedYet(string name, bool hasPutted)
+    {
+        if (name == "")
+        {
+            Debug.Log("StrokeManager.SetPlayerHasPuttedYet: Empty name parameter");
+        }
+        playerHasPuttedYet[name] = hasPutted;
+    }
+
+    public bool GetPlayerHasPuttedYet(string name)
+    {
+        if (name == "")
+        {
+            Debug.Log("StrokeManager.GetPlayerHasPuttedYet: Empty name parameter");
+        }
+        return playerHasPuttedYet[name];
+    }
+
+    public void ProcessBallInHole()
+    {
+        // If the ball stops, reset its rotation angle
+        ResetBallRotation();
+
+        sc.SetState(GameState.AIMING_BALL);
+
+        // If you are hosting a multiplayer game, 
+        // record the ball position and switch to the next player
+        if (mqtt.isHost && !sc.isSinglePlayer)
+        {
+
+            SetPlayerFinishedHole(mqtt.playerNames[sc.GetPlayerPuttingIndex()], true);
+
+
+            string positionString = playerBallGO.transform.position.x.ToString() + ","
+                                  + playerBallGO.transform.position.y.ToString() + ","
+                                  + playerBallGO.transform.position.z.ToString();
+
+            // Update scoreboard
+            sbm.scores[sc.GetPlayerPuttingIndex()][sc.GetLevel()]++;
+
+            // Broadcast player position to lobby
+            mqtt.Publish("newPlayerPosition," + mqtt.playerNames[sc.GetPlayerPuttingIndex()] + "," + positionString);
+            mqtt.ProcessStrokeFinished();
+        }
+    }
+
+    public void ResetAllBallPositions()
+    {
+        // Initialize the ball positions for each player
+        if (!sc.isSinglePlayer)
+        {
+            if (mqtt.playerNames.Count > 0)
+            {
+                for (int i = 0; i < mqtt.playerNames.Count; i++)
+                {
+                    ballPositions[mqtt.playerNames[i]] = new Vector3(0.0f, 0.0f, 0.0f);
+                    playerFinishedHole[mqtt.playerNames[i]] = false;
+                    playerHasPuttedYet[mqtt.playerNames[i]] = false;
+                }
+            }
+            else
+            {
+                Debug.Log("StrokeManager: Cannot initialize multiplayer ball positions. Bad playerNames");
+            }
+        }
     }
 
     // Update is called once per frame -- use this for inputs
@@ -102,6 +252,9 @@ public class StrokeManager : MonoBehaviour
     {
         // Display current game state
         strokeReadyStatus.text = sc.GetState().ToString();
+
+        // Display current putter
+        puttingPlayer.text = (sc.isSinglePlayer) ? "single player" : mqtt.playerNames[sc.GetPlayerPuttingIndex()];
     }
 
     // FixedUpdate runs on every tick of the physics engine -- use this for manipulation
@@ -110,6 +263,19 @@ public class StrokeManager : MonoBehaviour
         if (playerBallRB == null)
         {
             return;
+        }
+
+        if (moveBallToNameBuffer != "")
+        {
+            Debug.Log("Moving ball to " + moveBallToNameBuffer + " at position " + ballPositions[moveBallToNameBuffer].ToString());
+            playerBallRB.MovePosition(ballPositions[moveBallToNameBuffer]);
+            moveBallToNameBuffer = "";
+        }
+
+        if (resetBallRotationOnNextTick)
+        {
+            playerBallRB.MoveRotation(Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+            resetBallRotationOnNextTick = false;
         }
 
         // we must do this, otherwise the ball will not stop very fast
@@ -134,7 +300,33 @@ public class StrokeManager : MonoBehaviour
         {
             if (playerBallRB.velocity.magnitude < 0.01)
             {
+                // If the ball stops, reset its rotation angle
+                ResetBallRotation();
+                
                 sc.SetState(GameState.AIMING_BALL);
+
+                // If you are hosting a multiplayer game, 
+                // record the ball position and switch to the next player
+                if (mqtt.isHost && !sc.isSinglePlayer)
+                {
+                    // Determine whether the player is finished with the hole
+                    if (playerBallGO.transform.position.y < GameConstants.BALL_IN_HOLE_Y_THRESH)
+                    {
+                        //SetPlayerFinishedHole(mqtt.playerNames[sc.GetPlayerPuttingIndex()], true);
+                    }
+                         
+
+                    string positionString = playerBallGO.transform.position.x.ToString() + ","
+                                          + playerBallGO.transform.position.y.ToString() + ","
+                                          + playerBallGO.transform.position.z.ToString();
+
+                    // Update scoreboard
+                    sbm.scores[sc.GetPlayerPuttingIndex()][sc.GetLevel()]++;
+
+                    // Broadcast player position to lobby
+                    mqtt.Publish("newPlayerPosition," + mqtt.playerNames[sc.GetPlayerPuttingIndex()] + "," + positionString);
+                    mqtt.ProcessStrokeFinished();
+                }
             }
         }
         if (sc.GetState() == GameState.CHANGING_BALL_ANGLE)

@@ -10,7 +10,8 @@ public enum GameState
     CHANGING_BALL_ANGLE,
     AWAITING_SWING,
     SWINGING,
-    BALL_IN_MOTION
+    BALL_IN_MOTION,
+    NEXT_HOLE
 }
 
 public static class GameConstants
@@ -28,4 +29,5 @@ public static class GameConstants
     // 1000 ms button push = 45 degree tilt
     public const double MAX_ANGLE = 30;
     public const double MAX_BUTTON_MS = 1000;
+    public const double BALL_IN_HOLE_Y_THRESH = -0.2;
 }

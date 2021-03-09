@@ -4,12 +4,6 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 
-using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;
-using uPLibrary.Networking.M2Mqtt.Utility;
-using uPLibrary.Networking.M2Mqtt.Exceptions;
-using System;
-
 // TODO: Check if this import is necessary
 using System.Text;
 
@@ -137,4 +131,3 @@ public class MultiPlayerLobby : MonoBehaviour
         playerNameSlot4.text = mqtt.playerNames[3] == "" ? "Slot 4 empty..." : mqtt.playerNames[3];*/
     }
 }
-

@@ -13,21 +13,44 @@ public class ChatBoxManager : MonoBehaviour
     [SerializeField]
     List<Message> messageList = new List<Message>();
 
+    // Can only call SendMessageToChat during an Update() call
+    string messageBuffer;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        messageBuffer = "";
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (messageBuffer != "")
+        {
+            if (messageList.Count >= maxMessages)
+            {
+                Destroy(messageList[0].textObject.gameObject);
+                messageList.Remove(messageList[0]);
+            }
+            Message newMessage = new Message();
+            newMessage.text = messageBuffer;
 
+            GameObject newText = Instantiate(textObject, chatPanel.transform);
+
+            newMessage.textObject = newText.GetComponent<Text>();
+
+            newMessage.textObject.text = newMessage.text;
+
+            messageList.Add(newMessage);
+
+            messageBuffer = "";
+        }
     }
 
     public void SendMessageToChat(string text)
     {
-        if (messageList.Count >= maxMessages)
+        messageBuffer = text;
+        /*if (messageList.Count >= maxMessages)
         {
             Destroy(messageList[0].textObject.gameObject);
             messageList.Remove(messageList[0]);
@@ -41,7 +64,7 @@ public class ChatBoxManager : MonoBehaviour
 
         newMessage.textObject.text = newMessage.text;
 
-        messageList.Add(newMessage);
+        messageList.Add(newMessage);*/
     }
 }
 
