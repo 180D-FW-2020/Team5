@@ -9,4 +9,4 @@ Hole Ordering
 6: Choices Scene
 7: Snake Scene
 8: Valley Scene
-9: ZigZag Scene OR Loop Scene
+9: Loop Scene
